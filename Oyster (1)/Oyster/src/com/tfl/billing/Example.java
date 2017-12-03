@@ -26,7 +26,7 @@ public class Example {
 		 travelTracker.connect(paddingtonReader, bakerStreetReader, kingsCrossReader, eustonReader);
 		 
 		 paddingtonReader.touch(myCard);
-		 minutesPass(25);
+		 minutesPass(5);
 		 bakerStreetReader.touch(myCard);
 		 
 		
@@ -42,7 +42,7 @@ public class Example {
 		 travelTracker.chargeAccounts();
 		 }
 		 private static void minutesPass(int n) throws InterruptedException {
-		 Thread.sleep(n * 60* 1000);
+		 Thread.sleep(n *  1000);
 		 }
 		}
 

@@ -79,7 +79,9 @@ public class TravelTracker implements ScanListener{
         for (Journey journey : journeys) {
         	BigDecimal journeyPrice ; 
         	boolean isLong = ((journey.durationSeconds()/60) >= 25);
-        	System.out.println(isLong);
+        	boolean isPeak = peak(journey);
+        	
+        	/*
         	if (isLong)
         	{
         		if (peak(journey)) {
@@ -95,7 +97,26 @@ public class TravelTracker implements ScanListener{
                 }
         		else 
         		 journeyPrice = OFF_PEAK_JOURNEY_PRICE_SHORT;
+        	}*/
+        	
+        	if (isPeak)
+        	{
+        		setPeakCap = true;
+        		if (isLong) {
+                    journeyPrice = PEAK_JOURNEY_PRICE_LONG;
+                    
+                }
+        		else journeyPrice = PEAK_JOURNEY_PRICE_SHORT;
         	}
+        	else {
+        		if (isLong) {
+                    journeyPrice = OFF_PEAK_JOURNEY_PRICE_LONG;
+                    
+                }
+        		else 
+        		 journeyPrice = OFF_PEAK_JOURNEY_PRICE_SHORT;
+        	}
+           
            
             
             customerTotal = customerTotal.add(journeyPrice);
@@ -150,7 +171,7 @@ public class TravelTracker implements ScanListener{
     private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence) {
     	return poundsAndPence.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
-    
+   
 
     private boolean peak(Journey journey) {
         return peak(journey.startTime()) || peak(journey.endTime());

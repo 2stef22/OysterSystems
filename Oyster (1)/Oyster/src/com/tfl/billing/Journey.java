@@ -14,7 +14,15 @@ public class Journey {
         this.end = end;
 
     }
-
+    public UUID startcustomerId()
+    {
+    	return start.cardId();
+    }
+    public UUID endcustomerId()
+    {
+    	return end.cardId();
+    }
+    
     public UUID originId() {
         return start.readerId();
     }

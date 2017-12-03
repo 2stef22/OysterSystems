@@ -1,5 +1,6 @@
 package com.tfl.billing;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.UUID;
 
@@ -53,16 +54,28 @@ public class TravelTrackerTest  {
 
     }
     
-    private static void minutesPass(int n) throws InterruptedException {
-		 Thread.sleep(n *  1000);
-		 }
 
-	@Test
-    public void testifnotpeak()
-    {
     
-    }
-    
+    @Test
+	public void testIfPeak()
+	{
+		
+		ControllableClock clock = new ControllableClock();
+		clock.setCurrentTime(17,56);
+		TravelTracker travelTracker = new TravelTracker(clock);
+		
+		UUID customerCardId = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+	    UUID stationReaderId = UUID.randomUUID();
+	    
+		JourneyEvent myJourneyEvent1 = new JourneyStart(customerCardId, stationReaderId, clock);
+		clock.setCurrentTime(17, 59);
+	    JourneyEvent myJourneyEvent2 = new JourneyEnd(customerCardId, stationReaderId,clock);
+	    Journey myJourney = new Journey(myJourneyEvent1, myJourneyEvent2);
+	    
+	   
+	    assertEquals(travelTracker,true);
+	    
+	}
     
     @Test
     public void TheTest()

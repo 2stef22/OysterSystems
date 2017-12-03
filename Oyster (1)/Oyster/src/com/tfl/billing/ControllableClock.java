@@ -1,11 +1,10 @@
 package com.tfl.billing;
 
-import java.time.LocalTime;
 
 public class ControllableClock implements Clock {
 	private long now = 1512259200000L;
 	
-	//02/12/2017 13:00:00
+	//03/12/17 00:00:00  - European Calendar
 	@Override
 	
 	public long timeNow() {

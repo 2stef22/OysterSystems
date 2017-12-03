@@ -23,13 +23,13 @@ public class JourneyEventTest {
 	   @Test
 	    public void TestOriginId() {
 	        assertEquals(myJourney.originId(), stationReaderIdStart);
-	   //     assertEquals(myJourney.start.cardId(), customerCardId);
+	       assertEquals(myJourney.startcustomerId(), customerCardId);
 	    }
 
 	    @Test
 	    public void TestDestinationId() {
 	        assertEquals(myJourney.destinationId(), stationReaderIdEnd);
-	        //assertEquals(myJourneyEvent1.cardId(), aCardId);
+	        assertEquals(myJourney.endcustomerId(), customerCardId);
 	    }
 
 
@@ -74,5 +74,6 @@ public class JourneyEventTest {
 
 
 	    }
-
+	   
+	   
 }
