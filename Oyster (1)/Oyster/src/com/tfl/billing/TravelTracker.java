@@ -17,7 +17,33 @@ public class TravelTracker implements ScanListener{
     
     private final List<JourneyEvent> eventLog = new ArrayList<JourneyEvent>();
     private final Set<UUID> currentlyTravelling = new HashSet<UUID>();
-
+    private Database customerDatabase ; 
+    private UniversalPaymentSystem paymentSystem;
+    private Clock clock;
+    private  CustomerDatabase cdb;
+    
+    
+    
+    public TravelTracker()
+    {
+    	//this.cdb = CustomerDatabase.getInstance();
+    //	this.paymentSystem = PaymentSystem.getInstance();
+    	this.clock = new SystemClock();
+    }
+    public TravelTracker(Clock clock)
+    {
+    	//this.cdb = CustomerDatabase.getInstance();
+    //	this.paymentSystem = PaymentSystem.getInstance();
+    	this.clock = clock;
+    }
+    public TravelTracker(Database customerDatabase,UniversalPaymentSystem paymentSystem, Clock clock)
+    {
+    	this.customerDatabase = customerDatabase;
+    	this.paymentSystem = paymentSystem;
+    	this.clock = clock;
+    }
+    
+    
     public void chargeAccounts() {
         CustomerDatabase customerDatabase = CustomerDatabase.getInstance();
 
@@ -31,7 +57,8 @@ public class TravelTracker implements ScanListener{
         List<JourneyEvent> customerJourneyEvents = new ArrayList<JourneyEvent>();
         for (JourneyEvent journeyEvent : eventLog) {
             if (journeyEvent.cardId().equals(customer.cardId())) {
-                customerJourneyEvents.add(journeyEvent);
+            	
+            	customerJourneyEvents.add(journeyEvent);
             }
         }
 
@@ -50,9 +77,9 @@ public class TravelTracker implements ScanListener{
         boolean setPeakCap = false;
         BigDecimal customerTotal = new BigDecimal(0);
         for (Journey journey : journeys) {
-        	BigDecimal journeyPrice ; // = OFF_PEAK_JOURNEY_PRICE_SHORT;
-        	boolean isLong = checkDuration(journey);
-        	
+        	BigDecimal journeyPrice ; 
+        	boolean isLong = ((journey.durationSeconds()/60) >= 25);
+        	System.out.println(isLong);
         	if (isLong)
         	{
         		if (peak(journey)) {
@@ -66,11 +93,10 @@ public class TravelTracker implements ScanListener{
                     journeyPrice = PEAK_JOURNEY_PRICE_SHORT;
                     setPeakCap = true;
                 }
-        		else journeyPrice = OFF_PEAK_JOURNEY_PRICE_SHORT;
+        		else 
+        		 journeyPrice = OFF_PEAK_JOURNEY_PRICE_SHORT;
         	}
-            //BigDecimal journeyPrice = OFF_PEAK_JOURNEY_PRICE;
-           // if (peak(journey)) {
-             //   journeyPrice = PEAK_JOURNEY_PRICE;
+           
             
             customerTotal = customerTotal.add(journeyPrice);
         }
@@ -87,7 +113,7 @@ public class TravelTracker implements ScanListener{
         PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
     }
 
-	boolean checkDuration(Journey journey)
+/*	boolean checkDuration(Journey journey)
 	{  
 		int startMinutes, endMinutes , startHour , endHour , duration;
 		 Calendar calendar = Calendar.getInstance();
@@ -112,18 +138,16 @@ public class TravelTracker implements ScanListener{
 	   		duration = endMinutes + 60 - startMinutes + (endHour - startHour - 1)*60;
 	   	}
 	   	System.out.println(duration);
-	   	if (duration> 1) 
+	   	if (duration> 25) 
 		return true;
 	   		else 
 	   	return false;
 	   		
 	   	}
-	   	
+	   	*/
 	
 	
     private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence) {
-    	//System.out.println(poundsAndPence);
-    	//System.out.println(poundsAndPence.setScale(2, BigDecimal.ROUND_HALF_UP));
     	return poundsAndPence.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     
@@ -135,7 +159,9 @@ public class TravelTracker implements ScanListener{
     private boolean peak(Date time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
+        //calendar.setTime(new Date(clock.timeNow()));
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        System.out.println(hour);
         return (hour >= 6 && hour <= 9) || (hour >= 17 && hour <= 19);
     }
 

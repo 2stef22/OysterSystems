@@ -12,6 +12,7 @@ public class Journey {
     public Journey(JourneyEvent start, JourneyEvent end) {
         this.start = start;
         this.end = end;
+
     }
 
     public UUID originId() {

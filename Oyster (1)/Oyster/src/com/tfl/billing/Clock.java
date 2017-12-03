@@ -1,6 +1,8 @@
 package com.tfl.billing;
 
+import java.time.LocalTime;
+
 public interface Clock {
-	public int hourNow();
+	 long timeNow();
 
 }

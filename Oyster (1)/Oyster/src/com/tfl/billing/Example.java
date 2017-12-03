@@ -6,22 +6,30 @@ import com.tfl.underground.Station;
 public class Example {
 
 		 public static void main(String[] args) throws Exception {
-		 OysterCard myCard = new OysterCard("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-
-//		 OysterCard myCard1 = new OysterCard("38400010-8cf0-11bd-b23e-10b96e4ef00d");
-		 
+		
+		
+	   
+			 OysterCard myCard = new OysterCard("38400000-8cf0-11bd-b23e-10b96e4ef00d");
 		 OysterCardReader paddingtonReader = OysterReaderLocator.atStation(Station.PADDINGTON);
 		 OysterCardReader bakerStreetReader = OysterReaderLocator.atStation(Station.BAKER_STREET);
 		 OysterCardReader kingsCrossReader = OysterReaderLocator.atStation(Station.KINGS_CROSS);
 		 OysterCardReader eustonReader = OysterReaderLocator.atStation(Station.EUSTON);
 		 
-		 TravelTracker travelTracker = new TravelTracker();
+		 
+		 ControllableClock clock = new ControllableClock();
+		 //clock.setCurrentTime(15);
+		 //System.out.println(clock.timeNow());
+		 //System.out.println(System.currentTimeMillis());
+		 //TravelTracker travelTracker = new TravelTracker(clock);
+		 TravelTracker travelTracker =new TravelTracker();
 		 
 		 travelTracker.connect(paddingtonReader, bakerStreetReader, kingsCrossReader, eustonReader);
 		 
 		 paddingtonReader.touch(myCard);
-		 minutesPass(1);
+		 minutesPass(25);
 		 bakerStreetReader.touch(myCard);
+		 
+		
 		 
 		 //paddingtonReader.touch(myCard1);
 		 //minutesPass(1);
@@ -34,7 +42,7 @@ public class Example {
 		 travelTracker.chargeAccounts();
 		 }
 		 private static void minutesPass(int n) throws InterruptedException {
-		 Thread.sleep(n *  1000);
+		 Thread.sleep(n * 60* 1000);
 		 }
 		}
 
