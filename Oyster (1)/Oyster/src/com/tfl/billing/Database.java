@@ -5,9 +5,6 @@ import java.util.UUID;
 import com.tfl.external.Customer;
 
 public interface Database {
-	//static Database getInstance() {
-		
-	//}
 	
 	List<Customer> getCustomers();
 	

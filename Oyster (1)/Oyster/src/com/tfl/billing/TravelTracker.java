@@ -26,9 +26,18 @@ public class TravelTracker implements ScanListener{
     
     public TravelTracker()
     {
-    	//this.cdb = CustomerDatabase.getInstance();
+    	this.customerDatabase= AdapterDatabase.getInstance();
     //	this.paymentSystem = PaymentSystem.getInstance();
     	this.clock = new SystemClock();
+    	//this.currentlyTravelling = new HashSet<UUID>();
+    }
+    
+    public TravelTracker(Database customerDatabase)
+    {
+    	this.customerDatabase = customerDatabase;
+    	//this.paymentSystem = AdapterPayment.getInstance();
+    	
+    	
     }
     public TravelTracker(Clock clock)
     {
@@ -45,7 +54,7 @@ public class TravelTracker implements ScanListener{
     
     
     public void chargeAccounts() {
-        CustomerDatabase customerDatabase = CustomerDatabase.getInstance();
+        //CustomerDatabase customerDatabase = CustomerDatabase.getInstance();
 
         List<Customer> customers = customerDatabase.getCustomers();
         for (Customer customer : customers) {
@@ -131,7 +140,10 @@ public class TravelTracker implements ScanListener{
         	customerTotal = new BigDecimal("7");
         }
         	
-        PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
+        
+        
+        AdapterPayment.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
+        //PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
     }
 
 /*	boolean checkDuration(Journey journey)
@@ -199,7 +211,8 @@ public class TravelTracker implements ScanListener{
             currentlyTravelling.remove(cardId);
         } else {
             if (CustomerDatabase.getInstance().isRegisteredId(cardId)) {
-                currentlyTravelling.add(cardId);
+            
+            	currentlyTravelling.add(cardId);
                 eventLog.add(new JourneyStart(cardId, readerId));
             } else {
                 throw new UnknownOysterCardException(cardId);

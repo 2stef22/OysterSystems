@@ -21,15 +21,45 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 public class TravelTrackerTest  {
 	UUID customerCardId , stationReaderId;
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-	Database database = context.mock(Database.class);
+	//Database database = context.mock(Database.class);
 	
-	UniversalPaymentSystem payment = context.mock(UniversalPaymentSystem.class);
+	//UniversalPaymentSystem payment = context.mock(UniversalPaymentSystem.class);
 	
-	ControllableClock clock = new ControllableClock();
+	//ControllableClock clock = new ControllableClock();
 	
-    TravelTracker travelTracker = new TravelTracker(database,payment, clock);
+    TravelTracker travelTracker ;
    
     
+    @Test
+    public void testIfaSingleTravellerIsTracked()
+    {
+    	Database mockableDb = context.mock(Database.class);
+    	
+    	UUID cardId = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+    	OysterCard myCard = new OysterCard("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+    	UUID stationReaderId =UUID.randomUUID();
+
+        travelTracker = new TravelTracker(mockableDb);
+        
+        context.checking(new Expectations() { { 
+        	oneOf(mockableDb).isRegisteredId(cardId);
+        	
+        } });
+        
+       
+        travelTracker.cardScanned(cardId, stationReaderId);
+        
+        
+        //assertTrue(cuurentlyTravelling.contains(cardId));
+        
+
+    }
+    
+    
+    
+    
+    
+    /*
     
     @Test
     public void JourneyEventIsCreated() throws InterruptedException {
@@ -55,7 +85,7 @@ public class TravelTrackerTest  {
     }
     
 
-    
+    	
     @Test
 	public void testIfPeak()
 	{
@@ -94,7 +124,7 @@ public class TravelTrackerTest  {
 		 
 		
     }
-    
+    */
     
     /*
     @Test

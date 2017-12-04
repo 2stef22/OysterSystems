@@ -54,23 +54,26 @@ public class JourneyTest {
 		Journey myJourney = createClockandJourney();
 		assertEquals(myJourney.endTime().toString(),"Sun Dec 03 19:40:00 GMT 2017");
 	}
-	    
+	@Test    
 	public void checkDurationInSeconds()
 	{
 		Journey myJourney = createClockandJourney();
 		assertEquals(myJourney.durationSeconds(), 20*60);   
 	}
+	@Test
 	public void checkDurationInHours()
 	{
 		Journey myJourney = createClockandJourney();
 		assertEquals(myJourney.durationMinutes(), "20:0");
 	}
+	@Test
 	public void checkFormattedStartTime()
 	{
 		Journey myJourney = createClockandJourney();
 		assertEquals(myJourney.formattedStartTime(),"03/12/17 19:20" );
 	    
 	}
+	@Test
 	public void checkFormattedEndTime()
 	{
 		Journey myJourney = createClockandJourney();
