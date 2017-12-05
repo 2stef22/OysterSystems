@@ -6,7 +6,9 @@ import com.tfl.external.Customer;
 
 public interface Database {
 	
-	List<Customer> getCustomers();
+	//public void add(Customer customer);
+	
+	public List<Customer> getCustomers();
 	
 	boolean isRegisteredId(UUID cardId);
 }

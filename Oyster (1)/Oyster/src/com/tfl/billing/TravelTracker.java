@@ -16,33 +16,37 @@ public class TravelTracker implements ScanListener{
     static final BigDecimal PEAK_JOURNEY_PRICE_LONG = new BigDecimal(3.80);
     
     private final List<JourneyEvent> eventLog = new ArrayList<JourneyEvent>();
-    private final Set<UUID> currentlyTravelling = new HashSet<UUID>();
+    private  Set<UUID> currentlyTravelling = new HashSet<UUID>();
     private Database customerDatabase ; 
     private UniversalPaymentSystem paymentSystem;
     private Clock clock;
-    private  CustomerDatabase cdb;
+   
     
     
     
     public TravelTracker()
     {
     	this.customerDatabase= AdapterDatabase.getInstance();
-    //	this.paymentSystem = PaymentSystem.getInstance();
+    	this.paymentSystem = AdapterPayment.getInstance();
     	this.clock = new SystemClock();
-    	//this.currentlyTravelling = new HashSet<UUID>();
+    	
     }
     
     public TravelTracker(Database customerDatabase)
     {
     	this.customerDatabase = customerDatabase;
-    	//this.paymentSystem = AdapterPayment.getInstance();
-    	
-    	
+    	this.paymentSystem = AdapterPayment.getInstance();
     }
+    public TravelTracker(Database customerDatabase,UniversalPaymentSystem paymentSystem)
+    {
+    	this.customerDatabase = customerDatabase;
+    	this.paymentSystem = paymentSystem;
+    }
+    
     public TravelTracker(Clock clock)
     {
-    	//this.cdb = CustomerDatabase.getInstance();
-    //	this.paymentSystem = PaymentSystem.getInstance();
+    	this.customerDatabase= AdapterDatabase.getInstance();
+    	this.paymentSystem = AdapterPayment.getInstance();
     	this.clock = clock;
     }
     public TravelTracker(Database customerDatabase,UniversalPaymentSystem paymentSystem, Clock clock)
@@ -141,8 +145,8 @@ public class TravelTracker implements ScanListener{
         }
         	
         
-        
-        AdapterPayment.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
+       paymentSystem.charge(customer, journeys, roundToNearestPenny(customerTotal));
+      // AdapterPayment.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
         //PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
     }
 

@@ -34,6 +34,14 @@ public class TimeTests {
 		assertEquals(31,calendar.get(Calendar.MINUTE));
 	}
 	
+	@Test
+	public void testIfclockResets()
+	{
+		ControllableClock clock = new ControllableClock();
+		clock.setCurrentTime(19, 50);
+		clock.resetClock();
+		assertEquals(clock.timeNow(),1512259200000L);
+	}
 	
 	
 	

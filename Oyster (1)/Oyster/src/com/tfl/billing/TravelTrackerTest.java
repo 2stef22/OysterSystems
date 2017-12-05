@@ -1,7 +1,13 @@
 package com.tfl.billing;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.Rule;
@@ -9,6 +15,8 @@ import org.junit.Test;
 
 import com.oyster.OysterCard;
 import com.oyster.OysterCardReader;
+import com.oyster.ScanListener;
+import com.tfl.external.Customer;
 import com.tfl.underground.OysterReaderLocator;
 import com.tfl.underground.Station;
 
@@ -17,44 +25,204 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
-
+import org.junit.Test;
 public class TravelTrackerTest  {
-	UUID customerCardId , stationReaderId;
+	
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-	//Database database = context.mock(Database.class);
-	
-	//UniversalPaymentSystem payment = context.mock(UniversalPaymentSystem.class);
-	
-	//ControllableClock clock = new ControllableClock();
-	
-    TravelTracker travelTracker ;
-   
+	Database mockDB = context.mock(Database.class);
+	TravelTracker travelTracker = new TravelTracker(mockDB);
+    UniversalPaymentSystem mockPayment = context.mock(UniversalPaymentSystem.class);
+    TravelTracker travelTracker2 = new TravelTracker(mockDB, mockPayment);
+    private List<Journey> journeysDone = new ArrayList<Journey>();
+    private BigDecimal cost = new BigDecimal(0);
+    ControllableClock clock = new ControllableClock();
+    private List<Customer> fakeCustomers = new ArrayList<Customer>() {
+    	{
+            this.add(new Customer("Freddie Brooks", new OysterCard("baabe53c-d946-11e7-9296-cec278b6b50a")));
+    	}
+        };
+
     
+    @Test
+    public void testIfwecanGettheDb()
+    {
+    	context.checking(new Expectations() {{ 
+    		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
+    	}});
+    	
+    	mockDB.getCustomers();
+    }
+    
+    @Test 
+    public void testIfTheCustomerIsCharged()
+    {
+
+    	context.checking(new Expectations() {{
+    		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
+    		oneOf(mockPayment).charge(fakeCustomers.get(0), journeysDone ,roundToNearestPenny(cost));
+    		
+    	}});
+    	
+    	travelTracker2.chargeAccounts();
+    	
+    	
+    }
+    @Test 
+    public void checkOneTripCosts()
+    {
+
+    	UUID customerCardId = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+        //UUID stationReaderIdStart = UUID.fromString("38403333-8cf0-11bd-b23e-10b96e4ef00d");
+        //UUID stationReaderIdEnd = UUID.fromString("38403334-8cf0-11bd-b23e-10b96e4ef00d");
+        OysterCardReader paddingtonReader = OysterReaderLocator.atStation(Station.PADDINGTON);
+		 OysterCardReader bakerStreetReader = OysterReaderLocator.atStation(Station.BAKER_STREET);
+		 TravelTracker travelTracker3 = new TravelTracker(mockDB,mockPayment,clock);
+	    	
+		
+	    //	paddingtonReader.touch(new OysterCard(fakeCustomers.get(0).cardId().toString()));
+	    	
+        UUID myCard = UUID.fromString("baabe53c-d946-11e7-9296-cec278b6b50a");
+    	BigDecimal customerTotalpeakl = roundToNearestPenny(new BigDecimal(3.80));
+    	
+    	
+    	//BigDecimal customerTotalpeaks = new BigDecimal(2.90);
+    	//BigDecimal customerTotaloffl = new BigDecimal(2.70);	
+    	//BigDecimal customerTotaloffs = new BigDecimal(1.60);
+    	
+    	context.checking(new Expectations() {{
+    		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
+    		oneOf(mockPayment).charge(fakeCustomers.get(0), journeysDone ,roundToNearestPenny(customerTotalpeakl));
+    		
+    	}});
+    	
+    	//clock.setCurrentTime(17, 0);
+    	//paddingtonReader.touch(new OysterCard(fakeCustomers.get(0).cardId().toString()));
+    	//clock.setCurrentTime(0, 26);
+    	// bakerStreetReader.touch(new OysterCard(fakeCustomers.get(0).cardId().toString()));
+    	 travelTracker.connect(paddingtonReader, bakerStreetReader);
+
+    	 clock.setCurrentTime(17, 0);
+    //  JourneyEvent myJourneyEvent1 = new JourneyStart(customerCardId,paddingtonReader.id(), clock);
+    	 JourneyEvent myJourneyEvent1 = new JourneyStart(myCard.Id(),paddingtonReader.id(), clock);
+      System.out.println(paddingtonReader.id());
+      System.out.println(bakerStreetReader.id());
+      System.out.println(clock.timeNow());
+  	clock.setCurrentTime(0, 26);
+  	System.out.println(clock.timeNow());
+	JourneyEvent myJourneyEvent2 = new JourneyEnd(customerCardId, bakerStreetReader.id(), clock);
+	Journey myJourney = new Journey(myJourneyEvent1, myJourneyEvent2);
+	journeysDone.add(myJourney);
+	 
+	 clock.resetClock();
+	 paddingtonReader.touch(new OysterCard(myCard.toString()));
+
+	 bakerStreetReader.touch(new OysterCard(myCard.toString()));
+      travelTracker3.chargeAccounts();
+    }
+    
+ 
+
+   
+
+    
+
+    
+    @Test  (expected = UnknownOysterCardException.class)
+	public void checkIfExceptionIstThrownWhenUnknownCard()
+    {
+        
+        UUID customerCardId=UUID.fromString("38410000-8cf0-11bd-b23e-10b96e4ef00d");
+        UUID stationReaderId=UUID.randomUUID();
+        
+        
+        travelTracker.cardScanned(customerCardId, stationReaderId);
+    }
+    
+    private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence) {
+    	return poundsAndPence.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+}
+
+	        
+    	 
+    	 
+    	 
+    
+    
+    
+    /*
+    @Test
+    public void checkPrices()
+    {
+    	ControllableClock clock = new ControllableClock();
+		 OysterCard myCard = new OysterCard("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+		 OysterCardReader paddingtonReader = OysterReaderLocator.atStation(Station.PADDINGTON);
+		 OysterCardReader bakerStreetReader = OysterReaderLocator.atStation(Station.BAKER_STREET);
+		 travelTracker.connect(paddingtonReader, bakerStreetReader);
+		 clock.setCurrentTime(19, 51);
+		 paddingtonReader.touch(myCard);
+		 clock.setCurrentTime(0, 5);
+		 bakerStreetReader.touch(myCard);
+		 
+		 context.checking(new Expectations() { { 
+	        	exactly(1).of(mockablePayment).charge();
+	        	
+	        } });
+		 
+		 travelTracker.chargeAccounts();
+		 
+		  
+    }*/
+    /*
+  
+   @Test
+    public void testIfConnectIsCalled()
+    {
+    	OysterCardReader one = new OysterCardReader();
+    	OysterCardReader two = new OysterCardReader();
+    	OysterCard three = new OysterCard();
+    	ScanListener mockScan = context.mock(ScanListener.class);
+    	
+        UUID customerCardId=UUID.randomUUID();
+        UUID stationReaderId=UUID.randomUUID();
+        
+    	context.checking(new Expectations() {{
+    		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
+    		oneOf(mockScan).cardScanned(customerCardId, stationReaderId);
+    		    	
+    	}});
+    	
+    	one.touch(three);
+    	//travelTracker.chargeAccounts();
+    
+
+    	
+
+    }
     @Test
     public void testIfaSingleTravellerIsTracked()
     {
     	Database mockableDb = context.mock(Database.class);
-    	
-    	UUID cardId = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
     	OysterCard myCard = new OysterCard("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-    	UUID stationReaderId =UUID.randomUUID();
-
-        travelTracker = new TravelTracker(mockableDb);
+    	UUID cardId = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+       	UUID stationReaderId =UUID.randomUUID();
+  
+       	
+       	travelTracker = new TravelTracker(mockableDb);
         
         context.checking(new Expectations() { { 
-        	oneOf(mockableDb).isRegisteredId(cardId);
+        	exactly(1).of(mockableDb).isRegisteredId(cardId);
         	
         } });
         
        
         travelTracker.cardScanned(cardId, stationReaderId);
-        
-        
-        //assertTrue(cuurentlyTravelling.contains(cardId));
-        
-
-    }
+        //assertTrue(currentlyTravelling.contains(cardId));
+    } */
     
+	
+	
+
     
     
     
@@ -161,17 +329,7 @@ public class TravelTrackerTest  {
 			 }
 	
     
-	/*
-	@Test  (expected = UnknownOysterCardException.class)
-	public void checkIfExceptionIstThrownWhenUnknownCard()
-    {
-        
-        customerCardId=UUID.fromString("38410000-8cf0-11bd-b23e-10b96e4ef00d");
-        stationReaderId=UUID.randomUUID();
-        
-        
-        travelTracker.cardScanned(customerCardId, stationReaderId);
-    }*/
+
 	
 	
 	
@@ -214,4 +372,3 @@ public class TravelTrackerTest  {
 
 	
 	
-}

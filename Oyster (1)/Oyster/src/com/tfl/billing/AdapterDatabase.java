@@ -15,7 +15,7 @@ public class AdapterDatabase implements Database{
 	public static AdapterDatabase getInstance() {
 		return instance;
 	}
-	
+
 	@Override
 	public List<Customer> getCustomers() {
 		return customerDatabase.getCustomers();
