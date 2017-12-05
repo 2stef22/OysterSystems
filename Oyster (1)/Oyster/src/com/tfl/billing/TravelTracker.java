@@ -78,8 +78,7 @@ public class TravelTracker implements ScanListener{
         List<JourneyEvent> customerJourneyEvents = checkIfjourneyCardEqualsCustomerCard(customer);
          //   customerJourneyEvents = checkIfjourneCardEqualsCustomerCard(customer);
     
-        System.out.println(customerJourneyEvents);
-
+        
         List<Journey> journeys = new ArrayList<Journey>();
         //List<Journey>
         journeys = createJourneys(customerJourneyEvents, journeys);
@@ -206,14 +205,13 @@ public class TravelTracker implements ScanListener{
 
 	private ArrayList<JourneyEvent> checkIfjourneyCardEqualsCustomerCard(Customer customer) {
     	ArrayList<JourneyEvent> customerJourneyEvents = new ArrayList<JourneyEvent>();
-    	//System.out.println(eventLog);
+    
     	for (JourneyEvent journeyEvent : eventLog) {
-    		System.out.println(journeyEvent.cardId());
-         	System.out.println((customer.cardId()));
+    	
              if (journeyEvent.cardId().equals(customer.cardId())) {
              	
              	customerJourneyEvents.add(journeyEvent);
-             	System.out.println("entered");
+             	
              }
     	}
     	
