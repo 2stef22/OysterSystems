@@ -64,7 +64,6 @@ public class TravelTracker implements ScanListener{
         List<Customer> customers = customerDatabase.getCustomers();
         for (Customer customer : customers) {
             totalJourneysFor(customer);
-            System.out.println(customer);
         }
     }
 
@@ -230,7 +229,6 @@ public class TravelTracker implements ScanListener{
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        System.out.println(hour);
         return (hour >= 6 && hour <= 9) || (hour >= 17 && hour <= 19);
     }
 

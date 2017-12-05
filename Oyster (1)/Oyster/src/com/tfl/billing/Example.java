@@ -15,7 +15,7 @@ public class Example {
 		 OysterCardReader kingsCrossReader = OysterReaderLocator.atStation(Station.KINGS_CROSS);
 		 OysterCardReader eustonReader = OysterReaderLocator.atStation(Station.EUSTON);
 		 
-		 System.out.println(eustonReader.id());
+
 		 
 		 ControllableClock clock = new ControllableClock();
 		 //clock.setCurrentTime(15);

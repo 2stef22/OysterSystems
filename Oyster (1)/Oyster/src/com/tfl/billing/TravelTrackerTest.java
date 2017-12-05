@@ -70,56 +70,25 @@ public class TravelTrackerTest  {
     
     
     @Test
-    public void checkTripCost()
+    public void checkTripCostPeakLong()
     {
-    	ControllableClock clock = new ControllableClock();
-    	List<JourneyEvent> eventLog = new ArrayList<JourneyEvent>();
-    	
-    	 OysterCardReader paddingtonReader = OysterReaderLocator.atStation(Station.PADDINGTON);
-		 OysterCardReader bakerStreetReader = OysterReaderLocator.atStation(Station.BAKER_STREET);
-		 BigDecimal customerTotalpeakl = roundToNearestPenny(new BigDecimal(3.80));
-		 UUID myCard = fakeCustomers.get(0).cardId();
-		// UUID myCard = UUID.randomUUID();
-		 clock.setCurrentTime(17, 30);
-		 JourneyEvent myJourneyEvent1 = new JourneyStart(myCard,paddingtonReader.id(), clock);
-		
-		 System.out.println("lala");
-		 System.out.println(myJourneyEvent1);
-	  	 clock.setCurrentTime(0, 26);
-	   	 JourneyEvent myJourneyEvent2 = new JourneyEnd(myCard, bakerStreetReader.id(), clock);
-	   	 System.out.println("lala2");
-		 System.out.println(myJourneyEvent2);
-		 
-		 eventLog.add(myJourneyEvent1);
-		 eventLog.add(myJourneyEvent2);
-	   	// travelTracker3.cardScanned(myCard,paddingtonReader.id() );
-		// travelTracker3.cardScanned(myCard,bakerStreetReader.id() );
-	   	Journey myJourney = new Journey(myJourneyEvent1, myJourneyEvent2);
-	   	journeysDone.add(myJourney);
-	    System.out.println("lala3");
-		 System.out.println(myJourney);
-	   	
+    	TravelTracker travelTracker3 = createJourneyEventsToTestCharges(17,17,00,26);
+    	BigDecimal customerTotalpeakl = roundToNearestPenny(new BigDecimal(3.80));	
 		context.checking(new Expectations() {{
     		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
     	 oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotalpeakl))));
-    		//oneOf(mockPayment).charge(fakeCustomers.get(0),  journeysDone , roundToNearestPenny(customerTotalpeakl));
     	}});
-	   	//journeys
-		TravelTracker travelTracker3 = new TravelTracker(mockDB,mockPayment,clock,eventLog);
-		travelTracker3.connect(paddingtonReader,bakerStreetReader);
-		//paddingtonReader.touch(new OysterCard(myCard.toString()));
-
-		// bakerStreetReader.touch(new OysterCard(myCard.toString()));
+	 
 		 
 	     travelTracker3.chargeAccounts();
 	   	 
     }
     
     @Test
-    public void checkTripCostPs()
+    public void checkTripCostPeakShort()
     {
-    	TravelTracker travelTracker3 = createJourneyEventsToTestCharges();
-    	BigDecimal customerTotalpeakl = roundToNearestPenny(new BigDecimal(2.70));		
+    	TravelTracker travelTracker3 = createJourneyEventsToTestCharges(07,07,23,30);
+    	BigDecimal customerTotalpeakl = roundToNearestPenny(new BigDecimal(2.90));		
     		context.checking(new Expectations() {{
     	    		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
     	    		oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotalpeakl))));
@@ -132,9 +101,9 @@ public class TravelTrackerTest  {
     
 
     @Test
-    public void checkTripCostOl()
+    public void checkTripCostOffPeakLong()
     {
-    	    	TravelTracker travelTracker3 = createJourneyEventsToTestCharges();
+    	    	TravelTracker travelTracker3 = createJourneyEventsToTestCharges(14,15,11,12);
     			BigDecimal customerTotalpeakl = roundToNearestPenny(new BigDecimal(2.70));
     			context.checking(new Expectations() {{
     	    		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
@@ -147,7 +116,7 @@ public class TravelTrackerTest  {
     		   	 
     	    }
 
-	public TravelTracker createJourneyEventsToTestCharges() {
+	public TravelTracker createJourneyEventsToTestCharges(int hour1,int hour2, int min1, int min2) {
 		ControllableClock clock = new ControllableClock();
 		List<JourneyEvent> eventLog = new ArrayList<JourneyEvent>();
 		
@@ -155,9 +124,10 @@ public class TravelTrackerTest  {
 		 OysterCardReader bakerStreetReader = OysterReaderLocator.atStation(Station.BAKER_STREET);
  		
 		 UUID myCard = fakeCustomers.get(0).cardId();
-		 clock.setCurrentTime(3, 30);
+		 clock.setCurrentTime(hour1, min1);
 		 JourneyEvent myJourneyEvent1 = new JourneyStart(myCard,paddingtonReader.id(), clock);
-		 clock.setCurrentTime(0, 26);
+		 clock.resetClock();
+		 clock.setCurrentTime(hour2, min2);
 		 JourneyEvent myJourneyEvent2 = new JourneyEnd(myCard, bakerStreetReader.id(), clock);
 		 
 		 
@@ -171,46 +141,17 @@ public class TravelTrackerTest  {
     
     
     @Test
-    public void checkTripCostOs()
+    public void checkTripCostOffPeakShort()
     {
-    	    	ControllableClock clock = new ControllableClock();
-    	    	List<JourneyEvent> eventLog = new ArrayList<JourneyEvent>();
-    	    	
-    	    	 OysterCardReader paddingtonReader = OysterReaderLocator.atStation(Station.PADDINGTON);
-    			 OysterCardReader bakerStreetReader = OysterReaderLocator.atStation(Station.BAKER_STREET);
-    			 BigDecimal customerTotalpeakl = roundToNearestPenny(new BigDecimal(1.60));
-    			 UUID myCard = fakeCustomers.get(0).cardId();
-    			// UUID myCard = UUID.randomUUID();
-    			 clock.setCurrentTime(3, 30);
-    			 JourneyEvent myJourneyEvent1 = new JourneyStart(myCard,paddingtonReader.id(), clock);
-    			
-    			 System.out.println("lala");
-    			 System.out.println(myJourneyEvent1);
-    		  	 clock.setCurrentTime(0, 23);
-    		   	 JourneyEvent myJourneyEvent2 = new JourneyEnd(myCard, bakerStreetReader.id(), clock);
-    		   	 System.out.println("lala2");
-    			 System.out.println(myJourneyEvent2);
-    			 
-    			 eventLog.add(myJourneyEvent1);
-    			 eventLog.add(myJourneyEvent2);
-    		   	// travelTracker3.cardScanned(myCard,paddingtonReader.id() );
-    			// travelTracker3.cardScanned(myCard,bakerStreetReader.id() );
-    		   	Journey myJourney = new Journey(myJourneyEvent1, myJourneyEvent2);
-    		   	journeysDone.add(myJourney);
-    		    System.out.println("lala3");
-    			 System.out.println(myJourney);
+    	TravelTracker travelTracker3 = createJourneyEventsToTestCharges(21,21,03,10);
+    	BigDecimal customerTotal = roundToNearestPenny(new BigDecimal(1.60));	
     		   	
     			context.checking(new Expectations() {{
     	    		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
-    	    	 oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotalpeakl))));
-    	    		//oneOf(mockPayment).charge(fakeCustomers.get(0),  journeysDone , roundToNearestPenny(customerTotalpeakl));
+    	    	 oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotal))));
+    	    	
     	    	}});
-    		   	//journeys
-    			TravelTracker travelTracker3 = new TravelTracker(mockDB,mockPayment,clock,eventLog);
-    			travelTracker3.connect(paddingtonReader,bakerStreetReader);
-    			//paddingtonReader.touch(new OysterCard(myCard.toString()));
-
-    			// bakerStreetReader.touch(new OysterCard(myCard.toString()));
+    		  
     			 
     		     travelTracker3.chargeAccounts();
     		   	 
