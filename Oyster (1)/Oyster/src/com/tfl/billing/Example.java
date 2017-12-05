@@ -30,6 +30,33 @@ public class Example {
 		 minutesPass(5);
 		 bakerStreetReader.touch(myCard);
 		 
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
+		 paddingtonReader.touch(myCard);
+		 minutesPass(5);
+		 bakerStreetReader.touch(myCard);
 		
 		 
 		 //paddingtonReader.touch(myCard1);
