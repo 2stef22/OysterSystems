@@ -1,4 +1,4 @@
-package com.tfl.billing;
+package com.tfl.billing.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,7 +8,9 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-public class TimeTests {
+import com.tfl.billing.ControllableClock;
+
+public class ControllableClockTest {
 	
 	
 	public Calendar startClockandCalendar(int hour, int min) {
@@ -38,7 +40,10 @@ public class TimeTests {
 	public void testIfclockResets()
 	{
 		ControllableClock clock = new ControllableClock();
+		Calendar calendar = startClockandCalendar(19,50);
 		clock.setCurrentTime(19, 50);
+		assertEquals(19,calendar.get(Calendar.HOUR_OF_DAY));
+		assertEquals(50,calendar.get(Calendar.MINUTE));
 		clock.resetClock();
 		assertEquals(clock.timeNow(),1512259200000L);
 	}

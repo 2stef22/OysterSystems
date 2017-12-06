@@ -30,7 +30,7 @@ public class Example {
 		 minutesPass(5);
 		 bakerStreetReader.touch(myCard);
 		 
-		 paddingtonReader.touch(myCard);
+		/* paddingtonReader.touch(myCard);
 		 minutesPass(5);
 		 bakerStreetReader.touch(myCard);
 		 paddingtonReader.touch(myCard);
@@ -58,7 +58,7 @@ public class Example {
 		 minutesPass(5);
 		 bakerStreetReader.touch(myCard);
 		
-		 
+		 */
 		 //paddingtonReader.touch(myCard1);
 		 //minutesPass(1);
 		 //bakerStreetReader.touch(myCard1);

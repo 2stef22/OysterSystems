@@ -1,4 +1,4 @@
-package com.tfl.billing;
+package com.tfl.billing.test;
 
 import static org.junit.Assert.*;
 
@@ -9,12 +9,17 @@ import java.util.UUID;
 
 import org.junit.Test;
 
+import com.tfl.billing.ControllableClock;
+import com.tfl.billing.Journey;
+import com.tfl.billing.JourneyEnd;
+import com.tfl.billing.JourneyEvent;
+import com.tfl.billing.JourneyStart;
+
 public class JourneyTest {
 	
 	UUID customerCardId = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
     UUID stationReaderIdStart = UUID.fromString("38403333-8cf0-11bd-b23e-10b96e4ef00d");
     UUID stationReaderIdEnd = UUID.fromString("38403334-8cf0-11bd-b23e-10b96e4ef00d");
-
     
 	public Journey createClockandJourney() {
 		ControllableClock clock = new ControllableClock();

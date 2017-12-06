@@ -1,10 +1,14 @@
-package com.tfl.billing;
+package com.tfl.billing.test;
 
 import static org.junit.Assert.*;
 
 import java.util.UUID;
 
 import org.junit.Test;
+
+import com.tfl.billing.JourneyEnd;
+import com.tfl.billing.JourneyEvent;
+import com.tfl.billing.JourneyStart;
 
 public class JourneyEventTest {
 	UUID customerCardId = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
@@ -14,7 +18,6 @@ public class JourneyEventTest {
 	public JourneyEvent createJourneyStart() {
 		JourneyEvent myJourneyEventStart = new JourneyStart(customerCardId, stationReaderIdStart);
 		return myJourneyEventStart;
-
 	}
 
 	public JourneyEvent createJourneyEnd() {

@@ -14,41 +14,39 @@ public class TravelTracker implements ScanListener{
     static final BigDecimal PEAK_JOURNEY_PRICE_SHORT = new BigDecimal(2.90);
     static final BigDecimal OFF_PEAK_JOURNEY_PRICE_LONG =new BigDecimal(2.70);
     static final BigDecimal PEAK_JOURNEY_PRICE_LONG = new BigDecimal(3.80);
-    
-    private List<JourneyEvent> eventLog = new ArrayList<JourneyEvent>();
-    private  final Set<UUID> currentlyTravelling = new HashSet<UUID>();
+   
+    private List<JourneyEvent> eventLog ; //= new ArrayList<JourneyEvent>();
+    private final Set<UUID> currentlyTravelling = new HashSet<UUID>();
     private Database customerDatabase ; 
     private UniversalPaymentSystem paymentSystem;
     private Clock clock;
    
-    
-    
-    
+    /*
+     * package com.tfl.billing;
+
+import com.oyster.OysterCard;
+
+public  interface CardReader {
+	public void touch(OysterCard card);
+}
+
+     */
     public TravelTracker()
     {
     	this.customerDatabase= AdapterDatabase.getInstance();
     	this.paymentSystem = AdapterPayment.getInstance();
-    	this.clock = new SystemClock();
+    	//this.clock = new SystemClock();
+    	this.eventLog = new ArrayList<JourneyEvent>();
     	
     }
-    
-    public TravelTracker(Database customerDatabase)
-    {
-    	this.customerDatabase = customerDatabase;
-    	this.paymentSystem = AdapterPayment.getInstance();
-    }
+   
     public TravelTracker(Database customerDatabase,UniversalPaymentSystem paymentSystem)
     {
     	this.customerDatabase = customerDatabase;
     	this.paymentSystem = paymentSystem;
+    	this.eventLog = new ArrayList<JourneyEvent>();
     }
     
-    public TravelTracker(Clock clock)
-    {
-    	this.customerDatabase= AdapterDatabase.getInstance();
-    	this.paymentSystem = AdapterPayment.getInstance();
-    	this.clock = clock;
-    }
     public TravelTracker(Database customerDatabase,UniversalPaymentSystem paymentSystem, Clock clock,List<JourneyEvent> eventLog)
     {
     	this.customerDatabase = customerDatabase;
@@ -59,8 +57,7 @@ public class TravelTracker implements ScanListener{
     
     
     public void chargeAccounts() {
-        //CustomerDatabase customerDatabase = CustomerDatabase.getInstance();
-
+        
         List<Customer> customers = customerDatabase.getCustomers();
         for (Customer customer : customers) {
             totalJourneysFor(customer);
