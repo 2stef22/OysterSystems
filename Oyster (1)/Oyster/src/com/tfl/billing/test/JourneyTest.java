@@ -53,7 +53,7 @@ public class JourneyTest {
 	}
 
 	@Test
-	public void  checkStartDuration()
+	public void checkStartDuration()
 	{
 		
 		Journey myJourney = createClockandJourney();
@@ -91,14 +91,6 @@ public class JourneyTest {
 	{
 		Journey myJourney = createClockandJourney();
 	    assertEquals(myJourney.formattedEndTime(), "03/12/17 19:40");
-	}
-	
-	
-	
-	
-	
-	
-
-	
+	}	
 
 }
