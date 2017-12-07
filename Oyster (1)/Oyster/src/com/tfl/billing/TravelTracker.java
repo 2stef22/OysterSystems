@@ -36,7 +36,13 @@ public class TravelTracker implements ScanListener{
     	this.paymentSystem = paymentSystem;
     	this.eventLog = new ArrayList<JourneyEvent>();
     }
-    
+    public TravelTracker(Clock clock)
+    {
+    	this.customerDatabase= AdapterDatabase.getInstance();
+    	this.paymentSystem = AdapterPayment.getInstance();
+    	this.eventLog = new ArrayList<JourneyEvent>();
+    	this.clock = clock;
+    }
     public TravelTracker(Database customerDatabase,UniversalPaymentSystem paymentSystem, Clock clock,List<JourneyEvent> eventLog)
     {
     	this.customerDatabase = customerDatabase;
