@@ -30,7 +30,14 @@ public class JourneyTest {
 	    Journey myJourney = new Journey(myJourneyEvent1, myJourneyEvent2);
 		return myJourney;
 	}
-	
+
+	@Test
+	public void testCustomerId(){
+		Journey myJourney = createClockandJourney();
+		assertEquals(customerCardId, myJourney.startcustomerId());
+		assertEquals(customerCardId, myJourney.endcustomerId());
+	}
+
 	@Test
 	public void testOriginId() {
 		Journey myJourney = createClockandJourney();
