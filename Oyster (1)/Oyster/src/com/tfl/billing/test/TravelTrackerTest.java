@@ -51,7 +51,7 @@ public class TravelTrackerTest  {
     };
 
     @Test  (expected = UnknownOysterCardException.class)
-   	public void checkIfExceptionIstThrownWhenUnknownCard()
+   	public void checkIfExceptionIsThrownWhenUnknownCard()
     {
             
             UUID customerCardId=UUID.fromString("38414300-8cf0-11bd-b23e-10b96e4ef00d");
@@ -60,7 +60,7 @@ public class TravelTrackerTest  {
     }
             
     @Test
-    public void testIftheDatabseCanBeRetrieved()
+    public void testIftheDatabaseCanBeRetrieved()
     {
     	fakeCustomers.add(new Customer("Sonny Murphy", new OysterCard("bbabe53c-d946-11e7-9296-cec278b6b50a")));
     	context.checking(new Expectations() {{ 
@@ -105,8 +105,7 @@ public class TravelTrackerTest  {
        		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
        		oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotalpeakl))));	
     	 }});
-    	travelTracker.chargeAccounts();
-    		   	 
+    	travelTracker.chargeAccounts();	   	 
     }
     
 
@@ -119,8 +118,7 @@ public class TravelTrackerTest  {
     		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
     		oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotalpeakl))));
    		}});
-   			travelTracker.chargeAccounts();
-    		   	 
+   			travelTracker.chargeAccounts();	   	 
     }
 
 	
@@ -134,8 +132,7 @@ public class TravelTrackerTest  {
     		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
     		oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotal))));	
     	}});
-    	travelTracker.chargeAccounts();
-    		   	 
+    	travelTracker.chargeAccounts(); 		   	 
     }
 
     @Test
@@ -147,8 +144,7 @@ public class TravelTrackerTest  {
     		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
     		oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotal))));
     	   	}});
-    	travelTracker.chargeAccounts();
-    		   	 
+    	travelTracker.chargeAccounts();	   	 
     }
     @Test
     public void checkTripCostOffPeakCap()
@@ -159,8 +155,7 @@ public class TravelTrackerTest  {
     		oneOf(mockDB).getCustomers(); will(returnValue(fakeCustomers));
     		oneOf(mockPayment).charge(with(equal(fakeCustomers.get(0))),  with(aNonNull(ArrayList.class)) ,with(equal(roundToNearestPenny(customerTotal))));
     	   	}});
-    	travelTracker.chargeAccounts();
-    		   	 
+    	travelTracker.chargeAccounts();	   	 
     }
     
     
@@ -186,19 +181,14 @@ public class TravelTrackerTest  {
 			{
 				min = min - 60;
 				hour = hour + 1;
-
 			}
-
-
 			clock.setCurrentTime(hour, min);
 			JourneyEvent myJourneyEvent1 = new JourneyStart(myCard, paddingtonReader.id(), clock);
 			if (min > 59)
 			{
 				min = min - 60;
 				hour = hour + 1;
-
 			}
-		
 			clock.resetClock();
 			clock.setCurrentTime(hour + hourDifference, min+ minDifference);
 			JourneyEvent myJourneyEvent2 = new JourneyEnd(myCard, bakerStreetReader.id(), clock);

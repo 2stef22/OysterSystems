@@ -15,41 +15,44 @@ public class JourneyEventTest {
 	UUID stationReaderIdStart = UUID.randomUUID();
 	UUID stationReaderIdEnd = UUID.randomUUID();
 
-	public JourneyEvent createJourneyStart() {
+	public JourneyEvent createJourneyStart() 
+	{
 		JourneyEvent myJourneyEventStart = new JourneyStart(customerCardId, stationReaderIdStart);
 		return myJourneyEventStart;
 	}
 
-	public JourneyEvent createJourneyEnd() {
+	public JourneyEvent createJourneyEnd()
+	{
 		JourneyEvent myJourneyEventEnd = new JourneyEnd(customerCardId, stationReaderIdEnd);
 		return myJourneyEventEnd;
 	}
 
 	@Test
-	public void TestCardIdStart() {
+	public void TestCardIdStart() 
+	{
 		JourneyEvent myJourneyEventStart = createJourneyStart();
 		assertEquals(myJourneyEventStart.cardId(), customerCardId);
 	}
 
 	@Test
-	public void TestReaderIdStart() {
+	public void TestReaderIdStart() 
+	{
 		JourneyEvent myJourneyEventStart = createJourneyStart();
 		assertEquals(myJourneyEventStart.readerId(), stationReaderIdStart);
-
 	}
 
 	@Test
-	public void TestCardIdEnd() {
+	public void TestCardIdEnd() 
+	{
 		JourneyEvent myJourneyEventEnd = createJourneyEnd();
 		assertEquals(myJourneyEventEnd.cardId(), customerCardId);
 	}
 
 	@Test
-	public void TestReaderIdEnd() {
+	public void TestReaderIdEnd() 
+	{
 		JourneyEvent myJourneyEventEnd = createJourneyEnd();
 		assertEquals(myJourneyEventEnd.readerId(), stationReaderIdEnd);
-
-
 	}
 }
 

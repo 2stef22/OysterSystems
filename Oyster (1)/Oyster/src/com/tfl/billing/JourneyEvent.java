@@ -19,15 +19,18 @@ public abstract class JourneyEvent {
         this.time = clock.timeNow(); 
     }
 
-    public UUID cardId() {
+    public UUID cardId() 
+    {
         return cardId;
     }
 
-    public UUID readerId() {
+    public UUID readerId() 
+    {
         return readerId;
     }
 
-    public long time() {
+    public long time() 
+    {
         return time;
     }
 }

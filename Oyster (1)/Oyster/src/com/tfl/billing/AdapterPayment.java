@@ -20,17 +20,18 @@ public class AdapterPayment implements UniversalPaymentSystem{
 		return instance;
 	}
 	@Override
-	public void charge(Customer customer, List<Journey> journeys, BigDecimal totalBill) {
-
-	 paymentsSystem.charge(customer, journeys, totalBill);
+	public void charge(Customer customer, List<Journey> journeys, BigDecimal totalBill) 
+	{
+		paymentsSystem.charge(customer, journeys, totalBill);
 	}
 	
 	
 
 	@Override
-	public String stationwithReader(UUID originId) {
+	public String stationwithReader(UUID originId)
+	{
 		return OysterReaderLocator.lookup(originId).name();
-		}
+	}
 	
 
 }

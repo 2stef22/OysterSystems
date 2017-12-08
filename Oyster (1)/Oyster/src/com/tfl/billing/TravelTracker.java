@@ -27,7 +27,6 @@ public class TravelTracker implements ScanListener{
     	this.customerDatabase= AdapterDatabase.getInstance();
     	this.paymentSystem = AdapterPayment.getInstance();
     	this.eventLog = new ArrayList<JourneyEvent>();
-    	
     }
    
     public TravelTracker(Database customerDatabase,UniversalPaymentSystem paymentSystem)
@@ -36,7 +35,7 @@ public class TravelTracker implements ScanListener{
     	this.paymentSystem = paymentSystem;
     	this.eventLog = new ArrayList<JourneyEvent>();
     }
-    public TravelTracker(Clock clock)
+    public TravelTracker(Clock clock) //Not used in our implementation but could be useful for testing and running.
     {
     	this.customerDatabase= AdapterDatabase.getInstance();
     	this.paymentSystem = AdapterPayment.getInstance();
@@ -52,38 +51,35 @@ public class TravelTracker implements ScanListener{
     }
     
     
-    public void chargeAccounts() {
+    public void chargeAccounts() 
+    {
        
         List<Customer> customers = customerDatabase.getCustomers();
-        for (Customer customer : customers) {
+        for (Customer customer : customers) 
+        {
             totalJourneysFor(customer);
         }
     }
 
-    private void totalJourneysFor(Customer customer) {
+    private void totalJourneysFor(Customer customer)
+    {
       
         List<JourneyEvent> customerJourneyEvents = checkIfjourneyCardEqualsCustomerCard(customer);
-         
-    
-        
-        List<Journey> journeys = new ArrayList<Journey>();
-      
+        List<Journey> journeys = new ArrayList<Journey>();      
         journeys = createJourneys(customerJourneyEvents, journeys);
-        
-       
         BigDecimal customerTotal = calculateCustomerTotal(journeys);
-        
-   
-       paymentSystem.charge(customer, journeys, roundToNearestPenny(customerTotal));
+        paymentSystem.charge(customer, journeys, roundToNearestPenny(customerTotal));
      
     }
 
 
 	
-    private BigDecimal calculateCustomerTotal(List<Journey> journeys) {
-    	 boolean setPeakCap = false;
+    private BigDecimal calculateCustomerTotal(List<Journey> journeys) 
+    {
+    	boolean setPeakCap = false;
     	BigDecimal customerTotal = new BigDecimal(0);
-        for (Journey journey : journeys) {
+        for (Journey journey : journeys)
+        {
         	BigDecimal journeyPrice ; 
         	boolean isLong = ((journey.durationSeconds()/60) >= 25);
         	boolean isPeak = peak(journey);
@@ -91,16 +87,17 @@ public class TravelTracker implements ScanListener{
         	if (isPeak)
         	{
         		setPeakCap = true;
-        		if (isLong) {
-                    journeyPrice = PEAK_JOURNEY_PRICE_LONG;
-                    
+        		if (isLong)
+        		{
+                    journeyPrice = PEAK_JOURNEY_PRICE_LONG;    
                 }
         		else journeyPrice = PEAK_JOURNEY_PRICE_SHORT;
         	}
-        	else {
-        		if (isLong) {
-                    journeyPrice = OFF_PEAK_JOURNEY_PRICE_LONG;
-                    
+        	else 
+        	{
+        		if (isLong)
+        		{
+                    journeyPrice = OFF_PEAK_JOURNEY_PRICE_LONG;    
                 }
         		else 
         		 journeyPrice = OFF_PEAK_JOURNEY_PRICE_SHORT;
@@ -111,7 +108,8 @@ public class TravelTracker implements ScanListener{
         return checkCap(customerTotal,setPeakCap);
 	}
 
-	private BigDecimal checkCap(BigDecimal customerTotal, boolean setPeakCap) {
+	private BigDecimal checkCap(BigDecimal customerTotal, boolean setPeakCap) 
+	{
 		  if (setPeakCap && (customerTotal.compareTo(new BigDecimal("9")) == 1))
 	        {
 	        	customerTotal = new BigDecimal("9");
@@ -121,17 +119,19 @@ public class TravelTracker implements ScanListener{
 	        	customerTotal = new BigDecimal("7");
 	        }
 		  return customerTotal;
-	        
-	
 	}
 
-	private List<Journey> createJourneys(List<JourneyEvent> customerJourneyEvents , List<Journey> journeys) {
+	private List<Journey> createJourneys(List<JourneyEvent> customerJourneyEvents , List<Journey> journeys)
+	{
     	JourneyEvent start = null;
-        for (JourneyEvent event : customerJourneyEvents) {
-            if (event instanceof JourneyStart) {
+        for (JourneyEvent event : customerJourneyEvents) 
+        {
+            if (event instanceof JourneyStart) 
+            {
                 start = event;
             }
-            if (event instanceof JourneyEnd && start != null) {
+            if (event instanceof JourneyEnd && start != null) 
+            {
                 journeys.add(new Journey(start, event));
                 start = null;
             }
@@ -139,53 +139,60 @@ public class TravelTracker implements ScanListener{
 		return journeys;
 	}
 
-	private ArrayList<JourneyEvent> checkIfjourneyCardEqualsCustomerCard(Customer customer) {
-    	ArrayList<JourneyEvent> customerJourneyEvents = new ArrayList<JourneyEvent>();
-    
-    	for (JourneyEvent journeyEvent : eventLog) {
-    	
-             if (journeyEvent.cardId().equals(customer.cardId())) {
-             	
-             	customerJourneyEvents.add(journeyEvent);
-             	
-             }
+	private ArrayList<JourneyEvent> checkIfjourneyCardEqualsCustomerCard(Customer customer)
+	{
+    	ArrayList<JourneyEvent> customerJourneyEvents = new ArrayList<JourneyEvent>();	
+    	for (JourneyEvent journeyEvent : eventLog)
+    	{
+    		if (journeyEvent.cardId().equals(customer.cardId())) 
+    		{
+    			customerJourneyEvents.add(journeyEvent);
+            }
     	}
-    	
 		return customerJourneyEvents;
     }
-	private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence) {
+	private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence) 
+	{
     	return poundsAndPence.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
    
 
-    private boolean peak(Journey journey) {
+    private boolean peak(Journey journey) 
+    {
         return peak(journey.startTime()) || peak(journey.endTime());
     }
 
-    private boolean peak(Date time) {
+    private boolean peak(Date time) 
+    {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         return (hour >= 6 && hour <= 9) || (hour >= 17 && hour <= 19);
     }
 
-    public void connect(OysterCardReader... cardReaders) {
-        for (OysterCardReader cardReader : cardReaders) {
+    public void connect(OysterCardReader... cardReaders) 
+    {
+        for (OysterCardReader cardReader : cardReaders) 
+        {
             cardReader.register(this);
         }
     }
 
     @Override
-    public void cardScanned(UUID cardId, UUID readerId) {
-        if (currentlyTravelling.contains(cardId)) {
+    public void cardScanned(UUID cardId, UUID readerId)
+    {
+        if (currentlyTravelling.contains(cardId)) 
+        {
             eventLog.add(new JourneyEnd(cardId, readerId));
             currentlyTravelling.remove(cardId);
-        } else {
-            if (CustomerDatabase.getInstance().isRegisteredId(cardId)) {
-            
+        } else 
+        {
+            if (CustomerDatabase.getInstance().isRegisteredId(cardId)) 
+            {
             	currentlyTravelling.add(cardId);
                 eventLog.add(new JourneyStart(cardId, readerId));
-            } else {
+            } else 
+            {
                 throw new UnknownOysterCardException(cardId);
             }
         }

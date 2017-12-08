@@ -13,15 +13,15 @@ import com.tfl.billing.ControllableClock;
 public class ControllableClockTest {
 	
 	
-	public Calendar startClockandCalendar(int hour, int min) {
+	public Calendar startClockandCalendar(int hour, int min) 
+	{
 		ControllableClock clock = new ControllableClock();
-		
 		Calendar calendar = Calendar.getInstance();
 		clock.setCurrentTime(hour,min);
 		calendar.setTimeInMillis(clock.timeNow());
-		
 		return calendar;
 	}
+	
 	@Test
 	public void testHourControllableClock()
 	{
@@ -47,8 +47,4 @@ public class ControllableClockTest {
 		clock.resetClock();
 		assertEquals(clock.timeNow(),1512259200000L);
 	}
-	
-	
-	
-
 }

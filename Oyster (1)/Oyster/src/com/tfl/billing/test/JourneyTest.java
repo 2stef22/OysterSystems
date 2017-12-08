@@ -21,7 +21,8 @@ public class JourneyTest {
     UUID stationReaderIdStart = UUID.fromString("38403333-8cf0-11bd-b23e-10b96e4ef00d");
     UUID stationReaderIdEnd = UUID.fromString("38403334-8cf0-11bd-b23e-10b96e4ef00d");
     
-	public Journey createClockandJourney() {
+	public Journey createClockandJourney()
+	{
 		ControllableClock clock = new ControllableClock();
 		clock.setCurrentTime(19,20);
 		JourneyEvent myJourneyEvent1 = new JourneyStart(customerCardId, stationReaderIdStart, clock);
@@ -32,33 +33,32 @@ public class JourneyTest {
 	}
 
 	@Test
-	public void testCustomerId(){
+	public void testCustomerId()
+	{
 		Journey myJourney = createClockandJourney();
 		assertEquals(customerCardId, myJourney.startcustomerId());
 		assertEquals(customerCardId, myJourney.endcustomerId());
 	}
 
 	@Test
-	public void testOriginId() {
+	public void testOriginId()
+	{
 		Journey myJourney = createClockandJourney();
 	    assertEquals(stationReaderIdStart,myJourney.originId());
-	   
 	}
 	
 	@Test
 	public void testReaderEnd()
 	{
 		Journey myJourney = createClockandJourney();
-		 assertEquals(stationReaderIdEnd,myJourney.destinationId());
+		assertEquals(stationReaderIdEnd,myJourney.destinationId());
 	}
 
 	@Test
 	public void checkStartDuration()
 	{
-		
 		Journey myJourney = createClockandJourney();
 	    assertEquals(myJourney.startTime().toString(),"Sun Dec 03 19:20:00 GMT 2017");
-	    
 	}  
 	    
 	@Test
@@ -84,7 +84,6 @@ public class JourneyTest {
 	{
 		Journey myJourney = createClockandJourney();
 		assertEquals(myJourney.formattedStartTime(),"03/12/17 19:20" );
-	    
 	}
 	@Test
 	public void checkFormattedEndTime()

@@ -12,19 +12,21 @@ public class AdapterDatabase implements Database{
 	
 	private CustomerDatabase customerDatabase = CustomerDatabase.getInstance();
 	
-	public static AdapterDatabase getInstance() {
+	public static AdapterDatabase getInstance() 
+	{
 		return instance;
 	}
 
 	@Override
-	public List<Customer> getCustomers() {
+	public List<Customer> getCustomers() 
+	{
 		return customerDatabase.getCustomers();
 	}
 
 	@Override
-	public boolean isRegisteredId(UUID cardId) {
+	public boolean isRegisteredId(UUID cardId) 
+	{
 		return customerDatabase.isRegisteredId(cardId);
-		
 	}
 	
 }
